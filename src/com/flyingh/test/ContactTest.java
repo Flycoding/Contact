@@ -7,8 +7,16 @@ import android.util.Log;
 
 public class ContactTest extends AndroidTestCase {
 	private static final String TAG = "ContactTest";
-	
-	
+
+	public void testQueryNameByPhoneNumber() {
+		Cursor cursor = getContext().getContentResolver().query(
+				Uri.parse("content://com.android.contacts/data/phones/filter/"
+						+ "1 351-234-5678"), new String[] { "display_name" },
+				null, null, null);
+		if (cursor.moveToFirst()) {
+			Log.i(TAG, cursor.getString(cursor.getColumnIndex("display_name")));
+		}
+	}
 
 	public void testQuery() {
 		Cursor cursor = getContext().getContentResolver().query(
