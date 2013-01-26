@@ -1,10 +1,15 @@
 package com.flyingh.test;
 
+import java.util.ArrayList;
+
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.RemoteException;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
@@ -44,6 +49,22 @@ public class ContactTest extends AndroidTestCase {
 		values.put("mimetype", "vnd.android.cursor.item/email_v2");
 		contentResolver.insert(uri, values);
 
+	}
+
+	public void testAddContact2() throws RemoteException, OperationApplicationException {
+		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+		operations.add(ContentProviderOperation.newInsert(Uri.parse("content://com.android.contacts/raw_contacts")).withValue("sync1", null).build());
+		Uri uri = Uri.parse("content://com.android.contacts/data");
+		operations.add(ContentProviderOperation.newInsert(uri).withValueBackReference("raw_contact_id", 0).withValue("data1", "lisi")
+				.withValue("data2", "li").withValue("data3", "si").withValue("mimetype", "vnd.android.cursor.item/name").build());
+		operations.add(ContentProviderOperation.newInsert(uri).withValueBackReference("raw_contact_id", 0).withValue("data1", "15813578888")
+				.withValue("data2", 2).withValue("mimetype", "vnd.android.cursor.item/phone_v2").build());
+		operations.add(ContentProviderOperation.newInsert(uri).withValueBackReference("raw_contact_id", 0).withValue("data1", "lisi's address")
+				.withValue("data2", 1).withValue("mimetype", "vnd.android.cursor.item/postal-address_v2").build());
+		operations.add(ContentProviderOperation.newInsert(uri).withValueBackReference("raw_contact_id", 0).withValue("data1", "lisi@gmail.com")
+				.withValue("data2", 1).withValue("mimetype", "vnd.android.cursor.item/email_v2").build());
+
+		getContext().getContentResolver().applyBatch("com.android.contacts", operations);
 	}
 
 	public void testQueryNameByPhoneNumber() {
