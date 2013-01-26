@@ -9,6 +9,7 @@
         android:targetSdkVersion="17" />
     <instrumentation android:name="android.test.InstrumentationTestRunner" android:targetPackage="com.flyingh.contact"></instrumentation>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <application
         android:allowBackup="true"
